@@ -1,5 +1,8 @@
 import { registerBridgeBusinessPage, type BusinessPageService } from './business-page.ts';
 import { createVaultFolderBinding } from './vault-folder.ts';
+import { createCliTargetResolver, resolveCliExecutable } from './obsidian-cli.ts';
+import { ObsidianOperations, type OperationStorage } from './operation-service.ts';
+import { obsidianOperationSkill } from './operation-skill.ts';
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { DSH_IDENTITY_PATH, type DshInstanceIdentity, type ChangeVaultBindingRequest } from "dsh-obsidian-bridge-protocol/binding";
 import { VaultBridgeRuntime } from "./vault-runtime.ts";
@@ -56,8 +59,10 @@ export async function waitForBrowserOrigin(
   }
 }
 
-export interface Config { bridgeOrigin: string; dshInstanceId?: string; profileId?: string; displayName?:string; discoveryDirectory?:string; }
+export interface Config { bridgeOrigin: string; dshInstanceId?: string; profileId?: string; displayName?:string; discoveryDirectory?:string; obsidianCliPath?: string; obsidianRegistryPath?: string; }
 export const Config = s.object({
+  obsidianCliPath: s.string().default(''),
+  obsidianRegistryPath: s.string().default(''),
   displayName: s.string().default(""),
   discoveryDirectory: s.string().default(""),
   dshInstanceId: s.string().default(""),
@@ -103,6 +108,20 @@ export class BridgeLifecycleService extends TypertRemoteService implements Obsid
       injected.effect(()=>registerBridgeBusinessPage(pages,this,identity,{bindSelectedFolder}),"obsidian bridge: maintenance business page");
     });
     ctx.inject(["annotationCoreHost"], injected => mountReferences(injected as Parameters<typeof mountReferences>[0], { profileId: this.runtimeIdentity.profileId }));
+    ctx.inject(['skills'], scope => { scope.skills.register(obsidianOperationSkill); });
+    ctx.inject(['tools'], async scope => {
+      let active = true;
+      scope.effect(() => () => { active = false; }, 'obsidian bridge: CLI registration lifetime');
+      const { registerOperationTools } = await import('./operation-tools.ts');
+      if (!active) return;
+      const operations = new ObsidianOperations({
+        resolveTarget: createCliTargetResolver({ lifecycle: this, probe: origin => this.runtime.probe(origin), ...(config.obsidianRegistryPath ? { registryPath: config.obsidianRegistryPath } : {}) }),
+        executable: () => resolveCliExecutable(config.obsidianCliPath),
+        storage: scope.get('storageDomain') as unknown as OperationStorage,
+      });
+      scope.effect(() => () => operations.dispose(), 'obsidian bridge: CLI operations');
+      registerOperationTools(scope, this, operations);
+    });
     ctx.effect(() => async () => {try{await this.discovery.dispose();}finally{await this.runtime.dispose();}}, "dsh-obsidian-bridge: host");
   }
 

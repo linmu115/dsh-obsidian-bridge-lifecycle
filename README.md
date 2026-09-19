@@ -1,6 +1,11 @@
+> **停止维护 / Archived — 2026-09-19**
+> 本仓库已被统一桥项目 [dsh-obsidian-bridge](https://github.com/linmu115/dsh-obsidian-bridge) 替代，不再发布更新或接受新功能。
+> 新问题和改动请转到新仓库。历史源码、许可证和以下旧版说明保留供回查，旧版安装说明不再作为当前推荐。
+> Obsidian 侧插件 [obsidian-deepharness-bridge](https://github.com/linmu115/obsidian-deepharness-bridge) 继续维护。Protocol 源码转到新仓库 `vendor/protocol`；Suite 仅保留历史组合规格。
+
 # DSH Obsidian Bridge
 
-当前发布包是 **`dsh-obsidian-bridge@0.4.1-rc2.2`**，面向 DSH **0.1.5-rc.2**。一个桥插件提供实例身份、Vault 绑定、本机发现、多 Vault 连接与路由、Obsidian 来源和导航，以及桥连接管理界面。包内附带的 `cordis.patch.yml` 只加载自身一次。Protocol 已打包进入运行代码，用户无需另外安装 Lifecycle、Reference Adapter、Suite 或 Protocol。
+当前源码候选包是 **`dsh-obsidian-bridge@0.4.1-rc2.3`**，面向 DSH **0.1.5-rc.2**；2026-09-18 已与 Sticker 0.7.4-rc2.5 安装到本机 RC2/web，live 插件 active、操作 skill 目录已核验；Agent 实际工具调用尚未验收。一个桥插件提供实例身份、Vault 绑定、本机发现、多 Vault 连接与路由、Obsidian 来源和导航、桥连接管理，以及新增的绑定 Vault CLI 操作。包内附带的 `cordis.patch.yml` 只加载自身一次。Protocol 已打包进入运行代码，用户无需另外安装 Lifecycle、Reference Adapter、Suite 或 Protocol。
 
 ## 功能组合
 
@@ -36,6 +41,8 @@ Windows 上还可从 Maintenance 的「扩展 → Obsidian 系列 → 插件信�
 Obsidian 的待处理引用只由匹配目标 Viewer 的页面领取，独立 DSH 窗口不会抢走引用。打开笔记关联不会自动把笔记正文加入模型请求；明确引用后才交由 Core 管理。
 
 ## 从旧组合迁移
+
+新增操作 skill `obsidian-bound-vault` 和三个 DSH 工具 `dsh_obsidian_guide`、`dsh_obsidian_targets`、`dsh_obsidian_cli`，在相应宿主服务可用时注册。CLI 是操作工具的必需执行条件，缺少 CLI 不影响已有引用/绑定。详见[绑定 Vault 的 CLI 操作](docs/cli-operations.md)。
 
 升级安装配置时，将旧 Suite 父组中的必要配置拆到 Core、Bridge、普通 Sticker 各自独立的节点，每个插件仅一份。新的桥节点名为 `dsh-obsidian-bridge`，节点 ID 为 `obsidian-bridge`；移除旧 Suite、Lifecycle 和独立 Reference Adapter 的运行节点与包依赖。不要同时启用新旧桥。
 

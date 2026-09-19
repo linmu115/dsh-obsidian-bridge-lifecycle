@@ -1,6 +1,6 @@
 {
   "name": "dsh-obsidian-bridge",
-  "version": "0.4.1-rc2.2",
+  "version": "0.4.1-rc2.3",
   "description": "Unified DSH Obsidian Bridge with explicit Vault binding, routed reference channels and optional independent consumers.",
   "type": "module",
   "license": "MIT",
@@ -48,7 +48,8 @@
     "CHANGELOG.md",
     "README.md",
     "LICENSE",
-    "docs/changes"
+    "docs/changes",
+    "docs/cli-operations.md"
   ],
   "engines": {
     "node": ">=20"
@@ -63,12 +64,20 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/dsh-skill": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-tools": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.5-rc.2",
     "@deepseek-ai/schemastery": "*",
     "dsh-annotation-core": "0.3.11-rc2.2 || 0.3.12-rc2.1 || 0.3.12-rc2.2 || 0.3.12-rc2.3 || 0.3.12-rc2.4 || 0.3.12-rc2.5 || 0.3.12-rc2.6 || 0.3.12-rc2.7 || 0.3.12-rc2.8 || 0.3.12-rc2.9 || 0.3.12-rc2.10 || 0.3.12-rc2.11 || 0.3.12-rc2.12 || 0.3.12-rc2.19",
-    "@deepseek-ai/dsh-typert-protocol": "0.1.5-rc.2",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-skill": {
+      "optional": true
+    },
     "@deepseek-ai/cordis": {
       "optional": true
     },
@@ -87,18 +96,29 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "4.0.2",
+    "@deepseek-ai/dsh-agent": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-code-runtime": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-invariants": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-llm": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-scope": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-session": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-session-projection": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-skill": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-system-prompt": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-tools": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-typert-registry": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-user-approval": "0.1.5-rc.2",
     "@deepseek-ai/schemastery": "3.18.2",
     "@types/node": "^24.3.0",
+    "@types/react": "~18.3.1",
+    "dsh-annotation-core": "link:../dsh-annotation-core",
     "dsh-obsidian-bridge-protocol": "link:../../rc2-adapt-20260912/dsh-obsidian-bridge-protocol",
+    "react": "^18.2.0",
     "tsdown": "^0.22.14",
     "typescript": "^5.9.3",
     "unrun": "^0.3.1",
-    "vitest": "^4.1.11",
-    "dsh-annotation-core": "link:../dsh-annotation-core",
-    "@deepseek-ai/dsh-typert-protocol": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-typert-registry": "0.1.5-rc.2",
-    "react": "^18.2.0",
-    "@types/react": "~18.3.1"
+    "vitest": "^4.1.11"
   },
   "dsh": {
     "client": {
